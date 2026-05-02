@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 
+// Test Credentials
+const String Email = 'icha@gmail.com';
+const String Password = 'icha12345';
+
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Mobile Programming',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -22,9 +27,9 @@ class MyApp extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/dashboard') {
-          final email = settings.arguments as String?;
+          final email = settings.arguments as String? ?? '';
           return MaterialPageRoute(
-            builder: (context) => DashboardScreen(email: email ?? ''),
+            builder: (context) => DashboardScreen(email: email),
           );
         }
         return null;
@@ -35,7 +40,7 @@ class MyApp extends StatelessWidget {
 
 // ============ LOGIN SCREEN ============
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -49,6 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   String errorMessage = '';
   bool isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // Email validation
   String? _validateEmail(String? value) {
@@ -95,6 +105,21 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (_formKey.currentState!.validate()) {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      // Validate credentials
+      if (email != Email || password != Password) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email atau password salah!'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
       // Simulate login process
       setState(() {
         isLoading = true;
@@ -115,12 +140,12 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
 
-        // Navigate to dashboard dengan pushReplacement dan pass email
+        // Navigate to dashboard
         Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.pushReplacementNamed(
             context,
             '/dashboard',
-            arguments: _emailController.text,
+            arguments: email,
           );
         });
       });
@@ -256,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 // ============ FORGOT PASSWORD SCREEN ============
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ForgotPasswordScreen({super.key});
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -266,6 +291,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // Email validation
   String? _validateEmail(String? value) {
@@ -414,7 +444,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 class DashboardScreen extends StatelessWidget {
   final String email;
 
-  const DashboardScreen({Key? key, required this.email}) : super(key: key);
+  const DashboardScreen({super.key, required this.email});
 
   // Logout function
   void _handleLogout(BuildContext context) {
@@ -536,27 +566,6 @@ class DashboardScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.shopping_bag),
-              title: const Text('Produk'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Pengaturan'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.help),
-              title: const Text('Bantuan'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
@@ -574,26 +583,6 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Welcome section
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            color: Colors.blue.shade50,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Welcome!',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  email,
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
           // List section
           Expanded(
             child: ListView.builder(

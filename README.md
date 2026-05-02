@@ -83,29 +83,8 @@ Aplikasi dibangun dalam satu file (`lib/main.dart`) untuk memudahkan pembelajara
 ## 📱 Screenshots
 
 ### 1. Login Screen
-```
-┌─────────────────────────────────────┐
-│                                     │
-│           Welcome                   │
-│                                     │
-│  ┌─────────────────────────────────┐│
-│  │ Email: [_______________]        ││
-│  │ 📧                              ││
-│  └─────────────────────────────────┘│
-│                                     │
-│  ┌─────────────────────────────────┐│
-│  │ Password: [_______________]  👁 ││
-│  │ 🔒                              ││
-│  └─────────────────────────────────┘│
-│                                     │
-│  ┌──────────────────────────────┐  │
-│  │   LOGIN                      │  │
-│  └──────────────────────────────┘  │
-│                                     │
-│   Lupa Password?                    │
-│                                     │
-└─────────────────────────────────────┘
-```
+
+<img src="lib/img/login.png" alt="Alt Text" width="auto"/>
 
 **Fitur:**
 - Email validation (regex format)
