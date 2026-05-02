@@ -255,35 +255,158 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 // ============ FORGOT PASSWORD SCREEN ============
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  bool isLoading = false;
+
+  // Email validation
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email wajib diisi';
+    }
+
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+
+    if (!emailRegex.hasMatch(value)) {
+      return 'Format email tidak valid';
+    }
+
+    return null;
+  }
+
+  // Handle send reset link
+  void _handleSendResetLink() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Simulate sending email
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          isLoading = false;
+        });
+
+        // Show success SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Link reset password telah dikirim ke ${_emailController.text}',
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+
+        // Clear email field
+        _emailController.clear();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot Password'),
+        title: const Text('Lupa Password'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Forgot Password Screen',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40),
+                const Text(
+                  'Reset Password',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Masukkan email Anda untuk menerima link reset password',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 40),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      // Email Field
+                      TextFormField(
+                        controller: _emailController,
+                        validator: _validateEmail,
+                        enabled: !isLoading,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter your email',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          prefixIcon: const Icon(Icons.email),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      // Send Reset Link Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: isLoading ? null : _handleSendResetLink,
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : const Text(
+                                  'Send Reset Link',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Back to Login Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: TextButton(
+                          onPressed: isLoading ? null : () => Navigator.pop(context),
+                          child: const Text('Back to Login'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
-              },
-              child: const Text('Back to Login'),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 }
 
