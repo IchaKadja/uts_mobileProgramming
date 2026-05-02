@@ -418,33 +418,173 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dummy data - Produk Baju
+    final List<Map<String, String>> items = [
+      {
+        'title': 'T-Shirt Polos Katun',
+        'description': 'T-shirt premium 100% katun - Rp 89.000',
+        'category': 'Casual',
+      },
+      {
+        'title': 'Kemeja Formal Putih',
+        'description': 'Kemeja formal lengan panjang - Rp 249.000',
+        'category': 'Formal',
+      },
+      {
+        'title': 'Hoodie Abu-abu',
+        'description': 'Hoodie nyaman ukuran S-XXL - Rp 159.000',
+        'category': 'Casual',
+      },
+      {
+        'title': 'Blazer Navy',
+        'description': 'Blazer formal elegant warna navy - Rp 349.000',
+        'category': 'Formal',
+      },
+      {
+        'title': 'Tank Top Olahraga',
+        'description': 'Tank top breathable untuk gym - Rp 79.000',
+        'category': 'Sport',
+      },
+      {
+        'title': 'Jaket Denim Biru',
+        'description': 'Jaket denim vintage style - Rp 199.000',
+        'category': 'Casual',
+      },
+      {
+        'title': 'Polo Shirt Warna-warni',
+        'description': 'Polo shirt quality cotton - Rp 119.000',
+        'category': 'Casual',
+      },
+      {
+        'title': 'Sweater Wool Premium',
+        'description': 'Sweater wool tebal hangat - Rp 279.000',
+        'category': 'Formal',
+      },
+      {
+        'title': 'Jersey Sepak Bola',
+        'description': 'Jersey olahraga quick dry - Rp 99.000',
+        'category': 'Sport',
+      },
+      {
+        'title': 'Cardigan Coklat',
+        'description': 'Cardigan kasual warna coklat muda - Rp 149.000',
+        'category': 'Casual',
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Dashboard Screen',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Column(
+        children: [
+          // Welcome section
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            color: Colors.blue.shade50,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Welcome!',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  email,
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Email: $email',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/');
+          ),
+          // List section
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              item['title']!,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: item['category'] == 'Casual'
+                                    ? Colors.orange.shade100
+                                    : item['category'] == 'Formal'
+                                        ? Colors.blue.shade100
+                                        : Colors.green.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                item['category']!,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: item['category'] == 'Casual'
+                                      ? Colors.orange
+                                      : item['category'] == 'Formal'
+                                          ? Colors.blue
+                                          : Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          item['description']!,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
-              child: const Text('Logout'),
             ),
-          ],
-        ),
+          ),
+          // Logout button
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+                child: const Text('Logout'),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
