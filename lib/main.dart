@@ -38,6 +38,92 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool isLoading = false;
+  String errorMessage = '';
+  bool isPasswordVisible = false;
+
+  // Email validation
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email wajib diisi';
+    }
+    
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    
+    if (!emailRegex.hasMatch(value)) {
+      return 'Format email tidak valid';
+    }
+    
+    return null;
+  }
+
+  // Password validation
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password wajib diisi';
+    }
+    
+    if (value.length < 8) {
+      return 'Password minimal 8 karakter';
+    }
+    
+    final hasLetters = RegExp(r'[a-zA-Z]').hasMatch(value);
+    final hasNumbers = RegExp(r'[0-9]').hasMatch(value);
+    
+    if (!hasLetters || !hasNumbers) {
+      return 'Password harus kombinasi huruf dan angka';
+    }
+    
+    return null;
+  }
+
+  // Handle login
+  void _handleLogin() {
+    // Reset error message
+    setState(() {
+      errorMessage = '';
+    });
+
+    if (_formKey.currentState!.validate()) {
+      // Simulate login process
+      setState(() {
+        isLoading = true;
+      });
+
+      // Simulate delay
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          isLoading = false;
+        });
+
+        // Show success SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login berhasil!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        // Navigate to dashboard
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.pushNamed(context, '/dashboard');
+        });
+      });
+    } else {
+      // Show error SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Silakan perbaiki error di form'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Email Field
                       TextFormField(
                         controller: _emailController,
+                        validator: _validateEmail,
+                        enabled: !isLoading,
                         decoration: InputDecoration(
                           labelText: 'Email',
                           hintText: 'Enter your email',
@@ -77,7 +165,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Password Field
                       TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
+                        validator: _validatePassword,
+                        enabled: !isLoading,
+                        obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           hintText: 'Enter your password',
@@ -85,6 +175,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isPasswordVisible = !isPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -93,21 +195,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/dashboard');
-                          },
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          onPressed: isLoading ? null : _handleLogin,
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : const Text(
+                                  'Login',
+                                  style: TextStyle(fontSize: 16),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       // Forgot Password Button
                       TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/forgot-password');
-                        },
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                Navigator.pushNamed(context, '/forgot-password');
+                              },
                         child: const Text('Lupa Password?'),
                       ),
                     ],
