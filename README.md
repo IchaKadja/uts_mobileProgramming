@@ -94,31 +94,7 @@ Aplikasi dibangun dalam satu file (`lib/main.dart`) untuk memudahkan pembelajara
 - Success message ke Dashboard
 
 ### 2. Forgot Password Screen
-```
-┌─────────────────────────────────────┐
-│  Lupa Password               [✕]   │
-├─────────────────────────────────────┤
-│                                     │
-│      Reset Password                 │
-│                                     │
-│  Masukkan email untuk menerima      │
-│  link reset password                │
-│                                     │
-│  ┌─────────────────────────────────┐│
-│  │ Email: [_______________]        ││
-│  │ 📧                              ││
-│  └─────────────────────────────────┘│
-│                                     │
-│  ┌──────────────────────────────┐  │
-│  │ Send Reset Link              │  │
-│  └──────────────────────────────┘  │
-│                                     │
-│  ┌──────────────────────────────┐  │
-│  │ Back to Login                │  │
-│  └──────────────────────────────┘  │
-│                                     │
-└─────────────────────────────────────┘
-```
+<img src="lib/img/resetpass.png" alt="Alt Text" width="auto"/>
 
 **Fitur:**
 - Email input dengan validasi
@@ -127,32 +103,8 @@ Aplikasi dibangun dalam satu file (`lib/main.dart`) untuk memudahkan pembelajara
 - Back button dengan Navigator.pop()
 
 ### 3. Dashboard Screen
-```
-┌─────────────────────────────────────┐
-│  Dashboard                   [⤴] [≡]│
-├─────────────────────────────────────┤
-│ Welcome!                            │
-│ user@example.com                    │
-├─────────────────────────────────────┤
-│                                     │
-│ ┌─────────────────────────────────┐ │
-│ │ T-Shirt Polos Katun  [Casual]   │ │
-│ │ T-shirt premium 100% katun      │ │
-│ │ Rp 89.000                       │ │
-│ └─────────────────────────────────┘ │
-│                                     │
-│ ┌─────────────────────────────────┐ │
-│ │ Kemeja Formal Putih  [Formal]   │ │
-│ │ Kemeja formal lengan panjang    │ │
-│ │ Rp 249.000                      │ │
-│ └─────────────────────────────────┘ │
-│                                     │
-│ ┌─────────────────────────────────┐ │
-│ │ ... (7 more products)           │ │
-│ └─────────────────────────────────┘ │
-│                                     │
-└─────────────────────────────────────┘
-```
+
+<img src="lib/img/dashboard.png" alt="Alt Text" width="auto"/>
 
 **Fitur:**
 - Welcome header dengan email
