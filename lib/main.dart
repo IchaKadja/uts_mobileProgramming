@@ -19,7 +19,15 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
-        '/dashboard': (context) => const DashboardScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/dashboard') {
+          final email = settings.arguments as String?;
+          return MaterialPageRoute(
+            builder: (context) => DashboardScreen(email: email ?? ''),
+          );
+        }
+        return null;
       },
     );
   }
@@ -107,9 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
 
-        // Navigate to dashboard
+        // Navigate to dashboard dengan pushReplacement dan pass email
         Future.delayed(const Duration(milliseconds: 500), () {
-          Navigator.pushNamed(context, '/dashboard');
+          Navigator.pushReplacementNamed(
+            context,
+            '/dashboard',
+            arguments: _emailController.text,
+          );
         });
       });
     } else {
@@ -277,7 +289,9 @@ class ForgotPasswordScreen extends StatelessWidget {
 
 // ============ DASHBOARD SCREEN ============
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final String email;
+
+  const DashboardScreen({Key? key, required this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -294,10 +308,15 @@ class DashboardScreen extends StatelessWidget {
               'Dashboard Screen',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 20),
+            Text(
+              'Email: $email',
+              style: const TextStyle(fontSize: 16),
+            ),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/');
               },
               child: const Text('Logout'),
             ),
